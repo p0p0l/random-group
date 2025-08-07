@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistem Pembagian Kelompok (Login)</title>
+    
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f7f6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 800px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .login-container, .main-app {
+            display: none; /* Sembunyikan kedua bagian secara default */
+        }
+
+        .login-container.active, .main-app.active {
+            display: block;
+        }
+
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        p {
+            color: #7f8c8d;
+            margin-bottom: 25px;
+        }
+
+        .input-group {
+            margin: 15px auto;
+            max-width: 300px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #34495e;
+        }
+
+        input[type="password"], input[type="number"], select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #bdc3c7;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            margin-top: 10px;
+            transition: background-color 0.3s ease;
+        }
+
+        #btn-login, #btn-bagi {
+            background-color: #3498db;
+            color: white;
+        }
+
+        #btn-login:hover, #btn-bagi:hover {
+            background-color: #2980b9;
+        }
+
+        #btn-reset {
+            background-color: #e74c3c;
+            color: white;
+        }
+
+        #btn-reset:hover {
+            background-color: #c0392b;
+        }
+
+        .hasil-kelompok {
+            margin-top: 30px;
+            text-align: left;
+        }
+
+        .hasil-kelompok h3 {
+            border-bottom: 2px solid #ecf0f1;
+            padding-bottom: 5px;
+            margin-top: 20px;
+            color: #34495e;
+        }
+
+        .hasil-kelompok ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .hasil-kelompok li {
+            background-color: #ecf0f1;
+            margin: 5px 0;
+            padding: 10px;
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .pesan-error {
+            color: #e74c3c;
+            text-align: center;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="login-container" class="login-container active">
+            <h1>Login</h1>
+            <p>Masukkan kata sandi untuk mengakses sistem.</p>
+            <div class="input-group">
+                <label for="password">Kata Sandi:</label>
+                <input type="password" id="password">
+            </div>
+            <button id="btn-login">Login</button>
+            <div id="pesan-error-login" class="pesan-error"></div>
+        </div>
+        
+        <div id="main-app" class="main-app">
+            <h1>Pembagian Kelompok Mahasiswa</h1>
+            <p>Pilih program studi dan masukkan ukuran kelompok yang diinginkan, lalu tekan "Bagi Kelompok".</p>
+            
+            <div class="input-group">
+                <label for="select-prodi">Pilih Prodi:</label>
+                <select id="select-prodi">
+                    <option value="sistem_informasi">Sistem Informasi</option>
+                    <option value="ilmu_komputer">Ilmu Komputer</option>
+                    <option value="teknik_informatika">Teknik Informatika</option>
+                </select>
+            </div>
+
+            <div class="input-group">
+                <label for="ukuran-kelompok">Ukuran Kelompok:</label>
+                <input type="number" id="ukuran-kelompok" min="1" value="5">
+            </div>
+
+            <button id="btn-bagi">Bagi Kelompok</button>
+            <button id="btn-reset">Reset</button>
+
+            <div id="pesan-error-app" class="pesan-error"></div>
+
+            <div id="hasil-kelompok" class="hasil-kelompok">
+                </div>
+        </div>
+    </div>
+
+    <script>
+        // --- Data Mahasiswa untuk Setiap Prodi ---
+        const dataProdi = {
+            "sistem_informasi": {
+                nama: "Sistem Informasi",
+                mahasiswa: [
+                    "ABRAR", "AHMAD DAYURNI", "ALDI RISKY", "ALIL FAZILLAH", "NABILA ZAVIRA", "NASAR ILHAMDI", "NAUFAL MUZAKKI", "ILHAM ALGIPARI", "ARIF IRAWAN", "ADRIKAL MUNA",
+                    "MAULANA GUNEDI", "DWI SEKAR RENGGOWATI", "FAHRI ALPARISI", "FAIRUZ MAHARDHIKA", "FAIZAH ALFIYA", "FAKHROL REZY", "FERNANDA PUTRA", "HAFIZ ALFARISI", "HIZKIL MAULIZAR",
+                    "IKHSANUL FATA", "ISWANDI MABRUR", "JUANG MANGARAJA MARGOLANG", "MUHAMMAD HAIKAL AZIZ", "MAULANA ALFI", "MUHAMMAD AHKMUL WALIYYU", "MUHAMMAD AMIR FATAHILLAH", "MUHAMMAD FAJAR",
+                    "MUHAMMAD SULTHAN", "MUNAZIR", "NAZILA ILMA", "PUTRI ASSYIFA HUBELA", "QAID IQBAL AHMADY", "RABBIL IMAM SAMUDERA", "RAISUL IKRAM", "RIFKI RAHMAN", "RISKY RAMADHANI", "RIZKI ANDIKA",
+                    "SYAHRUL JAMAL", "SYIFA KHAIRI", "ZIKIR AZIZI", "AZMI AZIZ", "MOHD. NAUVAL FAHMY", "OVAL PRAMANDA", "SALMAN AL-FARISI", "ZUNNUR AL FIRDAUSI", "ARJONI AMIN. L", "M. RAZAQ",
+                    "NAURA SASKIA AYUZA", "M. EGI NOFRIZAL", "M. RIFQI DARMAWAN", "TIO ARAFAT", "ARIANSYAH", "EDI MULYADI"
+                ]
+            },
+            "ilmu_komputer": {
+                nama: "Ilmu Komputer",
+                mahasiswa: [
+                    "ABRAR", "AHMAD DAYURNI", "ALDI RISKY", "ALIL FAZILLAH", "NABILA ZAVIRA", "NASAR ILHAMDI", "NAUFAL MUZAKKI", "ILHAM ALGIPARI", "ARIF IRAWAN", "ADRIKAL MUNA",
+                    "MAULANA GUNEDI", "DWI SEKAR RENGGOWATI", "FAHRI ALPARISI", "FAIRUZ MAHARDHIKA", "FAIZAH ALFIYA", "FAKHROL REZY", "FERNANDA PUTRA", "HAFIZ ALFARISI", "HIZKIL MAULIZAR",
+                    "IKHSANUL FATA", "ISWANDI MABRUR", "JUANG MANGARAJA MARGOLANG", "MUHAMMAD HAIKAL AZIZ", "MAULANA ALFI", "MUHAMMAD AHKMUL WALIYYU", "MUHAMMAD AMIR FATAHILLAH", "MUHAMMAD FAJAR",
+                    "MUHAMMAD SULTHAN", "MUNAZIR", "NAZILA ILMA", "PUTRI ASSYIFA HUBELA", "QAID IQBAL AHMADY", "RABBIL IMAM SAMUDERA", "RAISUL IKRAM", "RIFKI RAHMAN", "RISKY RAMADHANI", "RIZKI ANDIKA",
+                    "SYAHRUL JAMAL", "SYIFA KHAIRI", "ZIKIR AZIZI", "AZMI AZIZ", "MOHD. NAUVAL FAHMY", "OVAL PRAMANDA", "SALMAN AL-FARISI", "ZUNNUR AL FIRDAUSI", "ARJONI AMIN. L", "M. RAZAQ",
+                    "NAURA SASKIA AYUZA", "M. EGI NOFRIZAL", "M. RIFQI DARMAWAN", "TIO ARAFAT", "ARIANSYAH", "EDI MULYADI"
+                ]
+            },
+            "teknik_informatika": {
+                nama: "Teknik Informatika",
+                mahasiswa: [
+                    "ABRAR", "AHMAD DAYURNI", "ALDI RISKY", "ALIL FAZILLAH", "NABILA ZAVIRA", "NASAR ILHAMDI", "NAUFAL MUZAKKI", "ILHAM ALGIPARI", "ARIF IRAWAN", "ADRIKAL MUNA",
+                    "MAULANA GUNEDI", "DWI SEKAR RENGGOWATI", "FAHRI ALPARISI", "FAIRUZ MAHARDHIKA", "FAIZAH ALFIYA", "FAKHROL REZY", "FERNANDA PUTRA", "HAFIZ ALFARISI", "HIZKIL MAULIZAR",
+                    "IKHSANUL FATA", "ISWANDI MABRUR", "JUANG MANGARAJA MARGOLANG", "MUHAMMAD HAIKAL AZIZ", "MAULANA ALFI", "MUHAMMAD AHKMUL WALIYYU", "MUHAMMAD AMIR FATAHILLAH", "MUHAMMAD FAJAR",
+                    "MUHAMMAD SULTHAN", "MUNAZIR", "NAZILA ILMA", "PUTRI ASSYIFA HUBELA", "QAID IQBAL AHMADY", "RABBIL IMAM SAMUDERA", "RAISUL IKRAM", "RIFKI RAHMAN", "RISKY RAMADHANI", "RIZKI ANDIKA",
+                    "SYAHRUL JAMAL", "SYIFA KHAIRI", "ZIKIR AZIZI", "AZMI AZIZ", "MOHD. NAUVAL FAHMY", "OVAL PRAMANDA", "SALMAN AL-FARISI", "ZUNNUR AL FIRDAUSI", "ARJONI AMIN. L", "M. RAZAQ",
+                    "NAURA SASKIA AYUZA", "M. EGI NOFRIZAL", "M. RIFQI DARMAWAN", "TIO ARAFAT", "ARIANSYAH", "EDI MULYADI"
+                ]
+            }
+        };
+
+        // --- Logika Login ---
+        const passwordBenar = "kampusmerdeka"; // Ganti dengan kata sandi yang Anda inginkan
+        const passwordInput = document.getElementById('password');
+        const btnLogin = document.getElementById('btn-login');
+        const loginContainer = document.getElementById('login-container');
+        const mainApp = document.getElementById('main-app');
+        const pesanErrorLogin = document.getElementById('pesan-error-login');
+
+        btnLogin.addEventListener('click', () => {
+            if (passwordInput.value === passwordBenar) {
+                loginContainer.classList.remove('active');
+                mainApp.classList.add('active');
+            } else {
+                pesanErrorLogin.textContent = "Kata sandi salah. Silakan coba lagi.";
+            }
+        });
+
+        // --- Logika Pembagian Kelompok (sama seperti sebelumnya) ---
+        const btnBagi = document.getElementById('btn-bagi');
+        const btnReset = document.getElementById('btn-reset');
+        const inputUkuran = document.getElementById('ukuran-kelompok');
+        const selectProdi = document.getElementById('select-prodi');
+        const hasilDiv = document.getElementById('hasil-kelompok');
+        const pesanErrorApp = document.getElementById('pesan-error-app');
+
+        function acakArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        function bagiKelompok() {
+            const prodiDipilih = selectProdi.value;
+            const semuaMahasiswa = dataProdi[prodiDipilih].mahasiswa;
+            const ukuranKelompokDasar = parseInt(inputUkuran.value);
+
+            if (isNaN(ukuranKelompokDasar) || ukuranKelompokDasar <= 0) {
+                pesanErrorApp.textContent = "Ukuran kelompok harus berupa angka bulat positif.";
+                return;
+            }
+
+            const mahasiswaYangDiacak = [...semuaMahasiswa];
+            acakArray(mahasiswaYangDiacak);
+
+            const jumlahKelompok = Math.floor(mahasiswaYangDiacak.length / ukuranKelompokDasar);
+            const sisaMahasiswa = mahasiswaYangDiacak.length % ukuranKelompokDasar;
+            const hasilKelompok = [];
+            let indeksMahasiswa = 0;
+
+            for (let i = 0; i < jumlahKelompok; i++) {
+                const kelompokBaru = [];
+                let ukuranTarget = ukuranKelompokDasar;
+                if (i < sisaMahasiswa) {
+                    ukuranTarget++;
+                }
+                while (kelompokBaru.length < ukuranTarget) {
+                    kelompokBaru.push(mahasiswaYangDiacak[indeksMahasiswa]);
+                    indeksMahasiswa++;
+                }
+                hasilKelompok.push(kelompokBaru);
+            }
+            
+            tampilkanHasil(hasilKelompok);
+        }
+
+        function tampilkanHasil(kelompok) {
+            hasilDiv.innerHTML = '';
+            pesanErrorApp.textContent = '';
+            kelompok.forEach((anggota, index) => {
+                const kelompokDiv = document.createElement('div');
+                kelompokDiv.innerHTML = `<h3>Kelompok ${index + 1} (Anggota: ${anggota.length})</h3>`;
+                const ul = document.createElement('ul');
+                anggota.forEach(nama => {
+                    const li = document.createElement('li');
+                    li.textContent = nama;
+                    ul.appendChild(li);
+                });
+                kelompokDiv.appendChild(ul);
+                hasilDiv.appendChild(kelompokDiv);
+            });
+        }
+
+        function reset() {
+            inputUkuran.value = 5;
+            selectProdi.value = "sistem_informasi";
+            hasilDiv.innerHTML = '';
+            pesanErrorApp.textContent = '';
+        }
+
+        btnBagi.addEventListener('click', bagiKelompok);
+        btnReset.addEventListener('click', reset);
+    </script>
+</body>
+</html>
