@@ -150,9 +150,9 @@
             <div class="input-group">
                 <label for="select-prodi">Pilih Prodi:</label>
                 <select id="select-prodi">
-                    <option value="sistem_informasi">Sistem Informasi</option>
-                    <option value="ilmu_komputer">Ilmu Komputer</option>
-                    <option value="teknik_informatika">Teknik Informatika</option>
+                    <option value="TEM">TEM</option>
+                    <option value="ARS">ARS</option>
+                    <option value="Bidan">Bidan</option>
                 </select>
             </div>
 
@@ -174,8 +174,8 @@
     <script>
         // --- Data Mahasiswa untuk Setiap Prodi ---
         const dataProdi = {
-            "sistem_informasi": {
-                nama: "Sistem Informasi",
+            "TEM": {
+                nama: "TEM",
                 mahasiswa: [
                     "ABRAR", "AHMAD DAYURNI", "ALDI RISKY", "ALIL FAZILLAH", "NABILA ZAVIRA", "NASAR ILHAMDI", "NAUFAL MUZAKKI", "ILHAM ALGIPARI", "ARIF IRAWAN", "ADRIKAL MUNA",
                     "MAULANA GUNEDI", "DWI SEKAR RENGGOWATI", "FAHRI ALPARISI", "FAIRUZ MAHARDHIKA", "FAIZAH ALFIYA", "FAKHROL REZY", "FERNANDA PUTRA", "HAFIZ ALFARISI", "HIZKIL MAULIZAR",
@@ -185,8 +185,8 @@
                     "NAURA SASKIA AYUZA", "M. EGI NOFRIZAL", "M. RIFQI DARMAWAN", "TIO ARAFAT", "ARIANSYAH", "EDI MULYADI"
                 ]
             },
-            "ilmu_komputer": {
-                nama: "Ilmu Komputer",
+            "ARS": {
+                nama: "ARS",
                 mahasiswa: [
                     "ABRAR", "AHMAD DAYURNI", "ALDI RISKY", "ALIL FAZILLAH", "NABILA ZAVIRA", "NASAR ILHAMDI", "NAUFAL MUZAKKI", "ILHAM ALGIPARI", "ARIF IRAWAN", "ADRIKAL MUNA",
                     "MAULANA GUNEDI", "DWI SEKAR RENGGOWATI", "FAHRI ALPARISI", "FAIRUZ MAHARDHIKA", "FAIZAH ALFIYA", "FAKHROL REZY", "FERNANDA PUTRA", "HAFIZ ALFARISI", "HIZKIL MAULIZAR",
@@ -196,8 +196,8 @@
                     "NAURA SASKIA AYUZA", "M. EGI NOFRIZAL", "M. RIFQI DARMAWAN", "TIO ARAFAT", "ARIANSYAH", "EDI MULYADI"
                 ]
             },
-            "teknik_informatika": {
-                nama: "Teknik Informatika",
+            "Bidan": {
+                nama: "Bidan",
                 mahasiswa: [
                     "ABRAR", "AHMAD DAYURNI", "ALDI RISKY", "ALIL FAZILLAH", "NABILA ZAVIRA", "NASAR ILHAMDI", "NAUFAL MUZAKKI", "ILHAM ALGIPARI", "ARIF IRAWAN", "ADRIKAL MUNA",
                     "MAULANA GUNEDI", "DWI SEKAR RENGGOWATI", "FAHRI ALPARISI", "FAIRUZ MAHARDHIKA", "FAIZAH ALFIYA", "FAKHROL REZY", "FERNANDA PUTRA", "HAFIZ ALFARISI", "HIZKIL MAULIZAR",
@@ -294,7 +294,7 @@
 
         function reset() {
             inputUkuran.value = 5;
-            selectProdi.value = "sistem_informasi";
+            selectProdi.value = "TEM";
             hasilDiv.innerHTML = '';
             pesanErrorApp.textContent = '';
         }
